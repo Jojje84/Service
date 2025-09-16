@@ -1,28 +1,11 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Portal from "./pages/Portal";
-import Navbar from "./pages/components/Navbar";
-import styled from "styled-components";
-
-const Page = styled.div`
-  margin: 2rem;
-`;
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
-    <>
-      <Page>
-        <Navbar />
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/portal" element={<Portal />} />
-
-      </Routes>
-      </Page>
-    </>
+    <Routes>
+      <Route path="/dashboard" element={<Dashboard />} />
+    </Routes>
   );
 }
 
