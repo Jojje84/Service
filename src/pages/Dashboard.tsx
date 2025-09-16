@@ -1,36 +1,44 @@
-
 import styled from "styled-components";
+import { Sidebar } from "./components/Sidebar"; // importera din sidebar
+import { StatCard } from "./components/StatCard";
+import { DashboardChart } from "./components/DashboardChart";
+import { FaUser, FaDollarSign, FaChartLine, FaHome } from "react-icons/fa";
 
-// Layout wrapper
-const Container = styled.div`
+const Layout = styled.div`
+  display: flex;
+  height: 100vh;
+  border: 15px solid #ddd;
+  border-radius: 25px; /* rundade hörn runt hela dashboard */
+  overflow: hidden; /* klipper så inget sticker ut */
+  background: #fff; /* så du inte ser body genom hörnen */
+`;
+
+const MainContent = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2rem;
   padding: 2rem;
+
+  border-radius: 12px;
+  background: #fff;
+  overflow-y: auto;
+  box-sizing: border-box;
 `;
 
-// Grid för kort
 const CardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
 `;
 
-// Kort-stil
-const Card = styled.div`
-  background: white;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
-  text-align: center;
-`;
-
-// Tabell
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
+  margin-top: 1rem;
 
-  th, td {
+  th,
+  td {
     border: 1px solid #ddd;
     padding: 8px;
   }
@@ -41,57 +49,63 @@ const Table = styled.table`
   }
 `;
 
+interface DataRow {
+  name: string;
+  status: "Active" | "Inactive";
+  value: number;
+}
+
+const recentData: DataRow[] = [
+  { name: "Alice", status: "Active", value: 120 },
+  { name: "Bob", status: "Inactive", value: 75 },
+  { name: "Charlie", status: "Active", value: 200 },
+];
+
 export default function Dashboard() {
+  const sidebarLinks = [
+    { label: "Home", path: "/", icon: <FaHome /> },
+    { label: "Users", path: "/users", icon: <FaUser /> },
+    { label: "Sales", path: "/sales", icon: <FaDollarSign /> },
+    { label: "Reports", path: "/reports", icon: <FaChartLine /> },
+  ];
+
   return (
-    <Container>
-      <h1>Dashboard</h1>
+    <Layout>
+      <Sidebar links={sidebarLinks} />
 
-      {/* Cards */}
-      <CardGrid>
-        <Card>
-          <h2>Users</h2>
-          <p>150</p>
-        </Card>
-        <Card>
-          <h2>Sales</h2>
-          <p>$2,300</p>
-        </Card>
-        <Card>
-          <h2>Active</h2>
-          <p>45</p>
-        </Card>
-      </CardGrid>
+      <MainContent>
+        <h1>Dashboard</h1>
 
-      {/* Simple Table */}
-      <div>
-        <h2>Recent Data</h2>
-        <Table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Status</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Alice</td>
-              <td>Active</td>
-              <td>120</td>
-            </tr>
-            <tr>
-              <td>Bob</td>
-              <td>Inactive</td>
-              <td>75</td>
-            </tr>
-            <tr>
-              <td>Charlie</td>
-              <td>Active</td>
-              <td>200</td>
-            </tr>
-          </tbody>
-        </Table>
-      </div>
-    </Container>
+        <CardGrid>
+          <StatCard title="Users" value={150} icon={<FaUser />} color="#4e73df" />
+          <StatCard title="Sales" value="$2,300" icon={<FaDollarSign />} color="#1cc88a" />
+          <StatCard title="Active" value={45} icon={<FaChartLine />} color="#36b9cc" />
+        </CardGrid>
+
+        <DashboardChart />
+
+        <div>
+          <h2>Recent Data</h2>
+          <Table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentData.map((row, idx) => (
+                <tr key={idx}>
+                  <td>{row.name}</td>
+                  <td>{row.status}</td>
+                  <td>{row.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      </MainContent>
+    </Layout>
   );
 }
